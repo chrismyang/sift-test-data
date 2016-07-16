@@ -114,8 +114,15 @@ def create_order(api_key, environment):
         '$items'                  : random_items
     })
 
+def print_usage():
+    print "Usage: python send-data.py [create-order | create-content] [api_key] [environment] [number_of_users]"
+
 def parse_args(argv):
-    return (argv[1], argv[2], argv[3], int(argv[4]))
+    if len(argv) < 5:
+        print_usage()
+        sys.exit(1)
+    else:
+        return (argv[1], argv[2], argv[3], int(argv[4]))
 
 if __name__ == '__main__':
     (command, api_key, environment, number_of_users) = parse_args(sys.argv)
