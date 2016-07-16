@@ -149,9 +149,10 @@ def select_random_categories():
 def sendEvent(api_key, properties):
     client = sift.Client(api_key)
     response = client.track("$create_content", properties) 
+    print response
     return response
 
-def create_order(api_key, environment, number_of_users):
+def create_content(api_key, environment, number_of_users):
     user_id = ""
     random_session_id = create_random_id()
     random_content_id = create_random_id()
@@ -162,23 +163,24 @@ def create_order(api_key, environment, number_of_users):
     currency_code = "USD"
 
     sendEvent(api_key, {
-    '$user_id'                : user_id,
-    '$session_id'             : random_session_id,
-    '$content_id'             : random_content_id,
-    '$amount'                 : random_amount,
-    '$subject'                : random_subject,
-    '$content'                : random_content,
-    '$categories'             : random_categories,
-    '$currency_code'          : currency_code
+        '$user_id'                : user_id,
+        '$session_id'             : random_session_id,
+        '$content_id'             : random_content_id,
+        '$amount'                 : random_amount,
+        '$subject'                : random_subject,
+        '$content'                : random_content,
+        '$categories'             : random_categories,
+        '$currency_code'          : currency_code
     })
 
 def parse_args(argv):
-    return (argv[1], argv[2], argv[3], argv[4])
+    return (argv[1], argv[2], argv[3], int(argv[4]))
 
 if __name__ == '__main__':
     (command, api_key, environment, number_of_users) = parse_args(sys.argv)
     
-    print "command=" + command + " api_key=" + api_key + " environment=" + environment + " number_of_users=" + number_of_users
+    print "command=" + command + " api_key=" + api_key + " environment=" + environment + " number_of_users=" + str(number_of_users)
 
-    if command == "create-order":
-        create_order(api_key, environment, number_of_users)   
+    for i in range(0, number_of_users):
+        if command == "create-content":
+            create_content(api_key, environment, number_of_users)   
