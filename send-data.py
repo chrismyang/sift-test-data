@@ -48,7 +48,6 @@ def sendEvent(api_key, event_name, properties):
     })
 
     response = client.track(event_name, amended_properties) 
-    print response
     return response
 
 def create_content(api_key, environment):
@@ -136,3 +135,7 @@ if __name__ == '__main__':
             create_order(api_key, environment)
         else:
             raise Exception("Unrecognized command " + command)    
+
+        print "Created event number " + str(i + 1) + " / " + str(number_of_events)
+
+    print "Created " + str(number_of_events) + " events successfully."
