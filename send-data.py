@@ -115,7 +115,7 @@ def create_order(api_key, environment):
     })
 
 def print_usage():
-    print "Usage: python send-data.py [create-order | create-content] [api_key] [environment] [number_of_users]"
+    print "Usage: python send-data.py [create-order | create-content] [api_key] [environment] [number_of_events]"
 
 def parse_args(argv):
     if len(argv) < 5:
@@ -125,11 +125,11 @@ def parse_args(argv):
         return (argv[1], argv[2], argv[3], int(argv[4]))
 
 if __name__ == '__main__':
-    (command, api_key, environment, number_of_users) = parse_args(sys.argv)
+    (command, api_key, environment, number_of_events) = parse_args(sys.argv)
     
-    print "command=" + command + " api_key=" + api_key + " environment=" + environment + " number_of_users=" + str(number_of_users)
+    print "command=" + command + " api_key=" + api_key + " environment=" + environment + " number_of_events=" + str(number_of_events)
 
-    for i in range(0, number_of_users):
+    for i in range(0, number_of_events):
         if command == "create-content":
             create_content(api_key, environment)   
         elif command == "create-order":
