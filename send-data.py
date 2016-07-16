@@ -132,7 +132,7 @@ def create_random_amount():
 
 def select_random_lines_contents():
     content = loadRandomContentFile()
-    random_line_number = random.randint(0, len(content))
+    random_line_number = random.randint(0, len(content) - 1)
     content_line = content[random_line_number]
     contents = content_line.split('#')
     return contents
@@ -146,15 +146,27 @@ def select_random_content():
 def select_random_categories():
     return [ select_random_lines_contents()[2] ]
 
-def sendEvent(api_key, properties):
+def add_properties(base, to_add):
+    z = base.copy()
+    z.update(to_add)
+    return z
+
+def sendEvent(api_key, event_name, properties):
+    user_id = ""
+    random_session_id = create_random_id()
+
     client = sift.Client(api_key)
-    response = client.track("$create_content", properties) 
+    
+    amended_properties = add_properties(properties, {
+        '$user_id'                : user_id,
+        '$session_id'             : random_session_id,
+    })
+
+    response = client.track(event_name, amended_properties) 
     print response
     return response
 
 def create_content(api_key, environment, number_of_users):
-    user_id = ""
-    random_session_id = create_random_id()
     random_content_id = create_random_id()
     random_amount = create_random_amount()
     random_subject = select_random_subject()
@@ -162,15 +174,30 @@ def create_content(api_key, environment, number_of_users):
     random_categories = select_random_categories()
     currency_code = "USD"
 
-    sendEvent(api_key, {
-        '$user_id'                : user_id,
-        '$session_id'             : random_session_id,
+    sendEvent(api_key, "$create_content", {
         '$content_id'             : random_content_id,
         '$amount'                 : random_amount,
         '$subject'                : random_subject,
         '$content'                : random_content,
         '$categories'             : random_categories,
         '$currency_code'          : currency_code
+    })
+
+def create_order():
+    random_order_id = create_random_id()
+    random_amount = create_random_amount()
+    currency_code = "USD"
+    random_billing_address = create_random_address()
+    random_shipping_address = create_random_address()
+    random_items = create_random_items()
+
+    sendEvent(api_key, "$create_order", {
+        '$order_id'               : random_order_id,
+        '$amount'                 : random_amount,
+        '$currency_code'          : currency_code,
+        '$billing_address'        : random_billing_address,
+        '$shipping_address'       : random_shipping_address,
+        '$items'                  : random_items
     })
 
 def parse_args(argv):
