@@ -118,9 +118,9 @@ import random
 #     '$currency_code'          : 'USD'
 #     })
 
-def loadRandomContentFile():
+def loadRandomContentFile(content_filename):
     data = []
-    with open("content.txt", "r") as myfile:
+    with open(content_filename, "r") as myfile:
         data = myfile.readlines()
     return data
 
@@ -130,21 +130,21 @@ def create_random_id():
 def create_random_amount():
     return random.randrange(10000000,500000000) # between 10 and 500 dollars
 
-def select_random_lines_contents():
-    content = loadRandomContentFile()
+def select_random_lines_contents(content_filename):
+    content = loadRandomContentFile(content_filename)
     random_line_number = random.randint(0, len(content) - 1)
     content_line = content[random_line_number]
     contents = content_line.split('#')
     return contents
 
 def select_random_subject():
-    return select_random_lines_contents()[0]
+    return select_random_lines_contents("content.txt")[0]
 
 def select_random_content():
-    return select_random_lines_contents()[1]    
+    return select_random_lines_contents("content.txt")[1]    
 
 def select_random_categories():
-    return [ select_random_lines_contents()[2] ]
+    return [ select_random_lines_contents("content.txt")[2] ]
 
 def add_properties(base, to_add):
     z = base.copy()
@@ -166,7 +166,7 @@ def sendEvent(api_key, event_name, properties):
     print response
     return response
 
-def create_content(api_key, environment, number_of_users):
+def create_content(api_key, environment):
     random_content_id = create_random_id()
     random_amount = create_random_amount()
     random_subject = select_random_subject()
@@ -183,7 +183,36 @@ def create_content(api_key, environment, number_of_users):
         '$currency_code'          : currency_code
     })
 
-def create_order():
+def create_random_address():
+    address_list = select_random_lines_contents("addresses.csv")
+
+    return {
+        '$address_1'              : address_list[0],
+        '$city'                   : address_list[1],
+        '$region'                 : address_list[2],
+        '$zipcode'                : address_list[3],
+        '$country'                : 'US'
+    }
+
+def create_random_items():
+    item_list = select_random_lines_contents("items.txt")
+    tags = [item_list[8], item_list[9], item_list[10]]
+    
+    item = {
+        '$item_id'                : item_list[0],
+        '$product_title'          : item_list[1],
+        'size'                    : item_list[2],
+        'color'                   : item_list[3],
+        '$price'                  : item_list[4],
+        '$sku'                    : item_list[5],
+        '$brand'                  : item_list[6],
+        '$category'               : item_list[7],
+        '$tags'                   : tags
+    }
+  
+    return [ item ]
+
+def create_order(api_key, environment):
     random_order_id = create_random_id()
     random_amount = create_random_amount()
     currency_code = "USD"
@@ -210,4 +239,6 @@ if __name__ == '__main__':
 
     for i in range(0, number_of_users):
         if command == "create-content":
-            create_content(api_key, environment, number_of_users)   
+            create_content(api_key, environment)   
+        elif command == "create-order":
+            create_order(api_key, environment)   
