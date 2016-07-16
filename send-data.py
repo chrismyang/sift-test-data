@@ -172,12 +172,11 @@ def create_order(api_key, environment, number_of_users):
     '$currency_code'          : currency_code
     })
 
+def parse_args(argv):
+    return (argv[1], argv[2], argv[3], argv[4])
 
 if __name__ == '__main__':
-    command = sys.argv[1]
-    api_key = sys.argv[2]
-    environment = sys.argv[3]
-    number_of_users = sys.argv[4]
+    (command, api_key, environment, number_of_users) = parse_args(sys.argv)
     
     print "command=" + command + " api_key=" + api_key + " environment=" + environment + " number_of_users=" + number_of_users
 
